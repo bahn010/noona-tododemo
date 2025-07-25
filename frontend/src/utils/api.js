@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: `http://todolist.ap-northeast-2.elasticbeanstalk.com/api`,
+  baseURL: `/api`,
   headers: {  
     "Content-Type": "application/json",
     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
