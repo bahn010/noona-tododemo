@@ -4,7 +4,8 @@ const taskcontroller = {};
 taskcontroller.createTask = async (req, res) => {
     try {
         const { task, isCompleted } = req.body;
-        const newTask = new Task({ task, isCompleted });
+        const author = req.userId;
+        const newTask = new Task({ task, isCompleted, author });
         await newTask.save();
         res.status(200).json({status: "success", data: newTask});
     } catch (error) {
@@ -14,7 +15,8 @@ taskcontroller.createTask = async (req, res) => {
 
 taskcontroller.getAllTasks = async (req, res) => {
   try {
-    const tasklist = await Task.find().select('-__v');
+    const author = req.userId;
+    const tasklist = await Task.find({author: author}).select('-__v')
     res.status(200).json({status: "success", data: tasklist});
   } catch (error) {
     res.status(400).json({status: "error", message: error});
@@ -23,9 +25,10 @@ taskcontroller.getAllTasks = async (req, res) => {
 
 taskcontroller.updateTask = async (req, res) => {
   try {
+    const author = req.userId;
     const { id } = req.params;
     const { task, isCompleted } = req.body;
-    const updatedTask = await Task.findByIdAndUpdate(id, { task, isCompleted }, { new: true });
+    const updatedTask = await Task.findByIdAndUpdate({_id: id, author: author}, { task, isCompleted }, { new: true });
     res.status(200).json({status: "success", data: updatedTask});
   } catch (error) {
     res.status(400).json({status: "error", message: error});
@@ -34,8 +37,9 @@ taskcontroller.updateTask = async (req, res) => {
 
 taskcontroller.deleteTask = async (req, res) => {
   try {
+    const author = req.userId;
     const { id } = req.params;
-    await Task.findByIdAndDelete(id);
+    await Task.findByIdAndDelete({_id: id, author: author});
     res.status(200).json({status: "success", message: "Task deleted successfully"});
   } catch (error) {
     res.status(400).json({status: "error", message: error});

@@ -5,13 +5,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-const TodoPage = () => {
+const TodoPage = ({ user, setUser }) => {
   const [todoList, setTodoList] = useState([]);
   const [todo, setTodo] = useState("");
 
   const getTasks = async () => {
     try {
       const response = await api.get("/tasks");
+      console.log("tasklist", response.data.data);
       setTodoList(response.data.data);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
@@ -38,12 +39,31 @@ const TodoPage = () => {
     getTasks();
   }
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    setUser(null);
+  }
+
   useEffect(() => {
     getTasks();
   }, []);
 
   return (
     <Container>
+      {user && (
+        <Row className="user-info-row">
+          <Col xs={12}>
+            <div className="user-welcome">
+              <div className="welcome-text">
+                안녕하세요, <strong>{user.name}</strong>님! 👋
+              </div>
+              <button className="button-logout" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </div>
+          </Col>
+        </Row>
+      )}
       <Row className="add-item-row">
         <Col xs={12} sm={10}>
           <input

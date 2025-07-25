@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const taskcontroller = require('../controller/task.controller'); // 태스크 컨트롤러 파일을 불러온다.
+const authController = require('../controller/auth.controller'); // 인증 컨트롤러 파일을 불러온다.
 
-router.post('/', taskcontroller.createTask); // 태스크 생성 엔드포인트
+router.post('/', authController.authenticateToken, taskcontroller.createTask); // 태스크 생성 엔드포인트
 
-router.get('/', taskcontroller.getAllTasks); // 모든 태스크 조회 엔드포인트
+router.get('/', authController.authenticateToken, taskcontroller.getAllTasks); // 모든 태스크 조회 엔드포인트
 
-router.put('/:id', taskcontroller.updateTask); // 태스크 업데이트 엔드포인트
+router.put('/:id', authController.authenticateToken, taskcontroller.updateTask); // 태스크 업데이트 엔드포인트
 
-router.delete('/:id', taskcontroller.deleteTask); // 태스크 삭제 엔드포인트 
+router.delete('/:id', authController.authenticateToken, taskcontroller.deleteTask); // 태스크 삭제 엔드포인트 
 
 module.exports = router;
 

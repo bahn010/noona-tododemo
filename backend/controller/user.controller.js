@@ -47,6 +47,19 @@ userController.loginUser = async (req, res) => {
         // 로그인이 성공하면 환경변수에서 설정된 TOKEN을 부여하여, 클라이언트에서 사용할 수 있도록 한다.
         // 해당 토큰이 존재하면, 다시 페이지에 접속해도 재로그인을 하지 않아도 된다.
         res.status(200).json({status: "success", data: {user, token}});
+
+        
+        
+    } catch (error) {
+        res.status(400).json({status: "error", message: error.message || error});
+    }
+}
+
+userController.getUser = async (req, res) => {
+    try {
+        const userId = req.userId; // 여기서 userID를 어떻게 받아올 수 있을까? -> 미들웨어 활용 필요(next() 활용)
+        const user = await Users.findById(userId)
+        res.status(200).json({status: "success", data: user});
     } catch (error) {
         res.status(400).json({status: "error", message: error.message || error});
     }

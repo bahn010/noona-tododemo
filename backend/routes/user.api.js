@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/user.controller'); // 유저 컨트롤러 파일을 불러온다.
-
+const authController = require('../controller/auth.controller');
 
 router.post('/', userController.createUser); // 회원가입 엔드포인트
 
 router.post('/login', userController.loginUser); // 로그인 엔드포인트
 
+router.get('/me', authController.authenticateToken, userController.getUser); // 유저 정보 조회 엔드포인트
 
 module.exports = router;
 
